@@ -7,13 +7,11 @@ RSpec.describe Tea, type: :model do
         it { should validate_presence_of(:temperature) }
         it { should validate_presence_of(:brew_time) }
 
-        it { should validate_uniqueness_of(:title) }
-
         it { should have_many(:subscriptions) }
 
         it "ensures title uniqueness case insensitively" do
-            tea1 = Tea.create!(title: "Blonk", description: "It's cool", temperature: "208°F", brew_time: "127 hours")
-            tea2 = Tea.create!(title: "BLONK", description: "It's cool", temperature: "208°F", brew_time: "127 hours")
+            tea1 = Tea.create(title: "Blonk", description: "It's cool", temperature: "208°F", brew_time: "127 hours")
+            tea2 = Tea.create(title: "BLONK", description: "It's cool", temperature: "208°F", brew_time: "127 hours")
     
             expect(tea2).not_to be_valid
             expect(tea2.errors[:title]).to include('has already been taken')

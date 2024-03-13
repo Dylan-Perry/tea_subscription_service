@@ -21,7 +21,7 @@ RSpec.describe 'Subscriptions Request API' do
 
             it "creates a subscription for a customer and tea" do
                 params = {
-                    title: "#{@tea1.name}",
+                    title: "#{@tea1.title}",
                     price: 6.00,
                     frequency: 2
                 }
