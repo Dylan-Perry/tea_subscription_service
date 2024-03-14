@@ -1,7 +1,7 @@
 class Subscription < ApplicationRecord
     # after_create :activate_subscription
 
-    validates :title, :price, :frequency, presence: :true
+    validates :title, :price, :frequency, :status, presence: :true
 
     enum status: { cancelled: 0, active: 1 }
 

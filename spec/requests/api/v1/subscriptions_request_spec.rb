@@ -165,5 +165,31 @@ RSpec.describe 'Subscriptions Request API' do
                 expect(result[:data][:attributes][:status]).to eq("cancelled")
             end
         end
+
+        describe "sad path" do
+            it "errors out when subscription ID does not match" do
+                params = {
+                    subscription_id: 4,
+                    status: 0
+                }
+                headers = {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+                
+                patch api_v1_customer_subscription_path(@customer1, @subscription1), headers: headers, params: JSON.generate(params)
+
+                result = JSON.parse(response.body, symbolize_names: true)
+
+                # Test response and status code
+                expect(response).to_not be_successful
+                expect(response.status).to eq(401)
+
+                # JSON formatting according to front end spec
+                expect(result).to be_a(Hash)
+
+                expect(result[:error]).to eq("Sorry, your credentials are bad!")
+            end
+        end
     end
 end
