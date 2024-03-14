@@ -276,7 +276,6 @@ RSpec.describe 'Subscriptions Request API' do
                 get "/api/v1/customers/55/subscriptions"
 
                 result = JSON.parse(response.body, symbolize_names: true)
-                require 'pry'; binding.pry
 
                 # Test response and status code
                 expect(response).to_not be_successful
