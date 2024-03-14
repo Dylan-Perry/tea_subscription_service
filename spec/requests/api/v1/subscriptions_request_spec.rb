@@ -192,4 +192,101 @@ RSpec.describe 'Subscriptions Request API' do
             end
         end
     end
+
+    describe "Subscription Index" do
+        before :each do
+            @customer1 = Customer.create!(
+                first_name: "General",
+                last_name: "Iroh",
+                email: "dragonofthewest@gmail.com",
+                address: "123 Pi Cho Ct, Ba Sing Se"
+                )
+
+            @customer2 = Customer.create!(
+            first_name: "Donkulus",
+            last_name: "Michael",
+            email: "coolguy@gmail.com",
+            address: "123 Pi Cho Ct, Ba Sing Se"
+            )
+
+            @tea1 = Tea.create!(
+                title: "Ginseng",
+                description: "Ginseng has been used for improving overall health. It has also been used to strengthen the immune system and help fight off stress and disease.",
+                temperature: "208°F",
+                brew_time: "5 - 10 minutes"
+            )
+
+            @subscription1 = @customer1.subscriptions.create!(
+                title: "#{@tea1.title}",
+                price: 6.00,
+                frequency: "1 week"
+            )
+
+            @subscription2 = @customer1.subscriptions.create!(
+                title: "Plumbus",
+                price: 2.99,
+                frequency: "2 weeks",
+                status: 0
+            )
+
+            @subscription3 = @customer2.subscriptions.create!(
+                title: "Cool Tea",
+                price: 62.00,
+                frequency: "1 month"
+            )
+        end
+
+        describe "happy path" do
+            it "shows all of a customer's subscriptions" do
+                get api_v1_customer_subscriptions_path(@customer1)
+
+                result = JSON.parse(response.body, symbolize_names: true)
+
+                # Test response and status code
+                expect(response).to be_successful
+                expect(response.status).to eq(200)
+
+                # Test correct JSON formatting
+                expect(result[:data]).to be_a Array
+
+                # Test attribute correctness
+                expect(result[:data].count).to eq 2
+
+                expect(result[:data][0][:attributes].count).to eq 4
+
+                expect(result[:data][0][:attributes]).to have_key(:title)
+                expect(result[:data][0][:attributes]).to have_key(:price)
+                expect(result[:data][0][:attributes]).to have_key(:status)
+                expect(result[:data][0][:attributes]).to have_key(:frequency)
+
+                expect(result[:data][0][:attributes][:title]).to eq("Ginseng")
+                expect(result[:data][0][:attributes][:price]).to eq(6.0)
+                expect(result[:data][0][:attributes][:frequency]).to eq("1 week")
+                expect(result[:data][0][:attributes][:status]).to eq("active")
+
+                expect(result[:data][1][:attributes][:title]).to eq("Plumbus")
+                expect(result[:data][1][:attributes][:price]).to eq(2.99)
+                expect(result[:data][1][:attributes][:frequency]).to eq("2 weeks")
+                expect(result[:data][1][:attributes][:status]).to eq("cancelled")
+            end
+        end
+
+        describe "sad path" do
+            it "errors out when customer ID does not match" do
+                get "/api/v1/customers/55/subscriptions"
+
+                result = JSON.parse(response.body, symbolize_names: true)
+                require 'pry'; binding.pry
+
+                # Test response and status code
+                expect(response).to_not be_successful
+                expect(response.status).to eq(401)
+
+                # JSON formatting according to front end spec
+                expect(result).to be_a(Hash)
+
+                expect(result[:error]).to eq("Sorry, your credentials are bad!")
+            end
+        end
+    end
 end
