@@ -21,18 +21,21 @@ RSpec.describe 'Subscriptions Request API' do
 
             it "creates a subscription for a customer and tea" do
                 params = {
+                    customer_email: "#{@customer1.email}",
                     title: "#{@tea1.title}",
                     price: 6.00,
-                    frequency: 2
+                    frequency: "1 week"
                 }
                 headers = { 
                     "Content-Type": "application/json",
                     "Accept": "application/json"
                 }
                 
-                post api_v1_subscriptions_path, headers: headers, params: JSON.generate(params)
+                post api_v1_customer_subscriptions_path(@customer1), headers: headers, params: JSON.generate(params)
 
                 result = JSON.parse(response.body, symbolize_names: true)
+
+                require 'pry'; binding.pry
 
                 # Test response and status code
                 expect(response).to be_successful
@@ -52,12 +55,12 @@ RSpec.describe 'Subscriptions Request API' do
                 expect(result[:data][:attributes][:title]).to be_a(String)
                 expect(result[:data][:attributes][:price]).to be_a(Float)
                 expect(result[:data][:attributes][:status]).to be_a(String)
-                expect(result[:data][:attributes][:frequency]).to be_a(Integer)
+                expect(result[:data][:attributes][:frequency]).to be_a(String)
 
                 expect(result[:data][:attributes][:title]).to eq(@tea1.title)
-                expect(result[:data][:attributes][:price]).to eq(@tea1.price)
-                expect(result[:data][:attributes][:status]).to eq(@tea1.status)
-                expect(result[:data][:attributes][:frequency]).to eq(@tea1.frequency)
+                expect(result[:data][:attributes][:price]).to eq(6.00)
+                expect(result[:data][:attributes][:frequency]).to eq("1 week")
+                expect(result[:data][:attributes][:status]).to eq("active")
             end
         end
     end

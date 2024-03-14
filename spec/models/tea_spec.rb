@@ -7,7 +7,7 @@ RSpec.describe Tea, type: :model do
         it { should validate_presence_of(:temperature) }
         it { should validate_presence_of(:brew_time) }
 
-        it { should have_many(:subscriptions) }
+        it { should have_many(:tea_subscriptions) }
 
         it "ensures title uniqueness case insensitively" do
             tea1 = Tea.create(title: "Blonk", description: "It's cool", temperature: "208°F", brew_time: "127 hours")
