@@ -1,5 +1,5 @@
 class Subscription < ApplicationRecord
-    after_create :activate_subscription
+    # after_create :activate_subscription
 
     validates :title, :price, :frequency, presence: :true
 

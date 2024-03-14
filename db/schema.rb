@@ -24,7 +24,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_14_181139) do
     t.string "title"
     t.float "price"
     t.string "frequency"
-    t.string "status"
+    t.integer "status", default: 1
     t.integer "customer_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
