@@ -6,6 +6,10 @@ class ApplicationController < ActionController::API
     end
 
     def find_customer_by_email(email)
-        Customer.find_by(email: email)
+        if customer = Customer.find_by(email: email)
+            customer
+        else
+            raise ActiveRecord::RecordNotFound
+        end
     end
 end

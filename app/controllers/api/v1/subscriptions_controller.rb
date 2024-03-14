@@ -4,7 +4,7 @@ class Api::V1::SubscriptionsController < ApplicationController
     def create
         customer = find_customer_by_email(params[:customer_email])
 
-        if customer
+        # if customer
             subscription = customer.subscriptions.new(subscription_params)
 
             if subscription.save
@@ -12,21 +12,20 @@ class Api::V1::SubscriptionsController < ApplicationController
             else
                 render json: subscription.errors, status: :unauthorized
             end
-        else
-            raise ActiveRecord::RecordNotFound
-        end
+        # else
+        #     require 'pry'; binding.pry
+        #     raise ActiveRecord::RecordNotFound
+        # end
     end
 
     # POST /customers/customer_id/subscriptions/subscription_id
     def update
-        if subscription = Subscription.find(params[:subscription_id])
-            if subscription.update(subscription_params)
-                render json: SubscriptionSerializer.new(subscription), status: :ok
-            else
-                render json: subscription.errors, status: :unprocessable_entity
-            end
+        subscription = Subscription.find(params[:subscription_id])
+
+        if subscription.update(subscription_params)
+            render json: SubscriptionSerializer.new(subscription), status: :ok
         else
-            raise ActiveRecord::RecordNotFound
+            render json: subscription.errors, status: :unprocessable_entity
         end
     end
     
