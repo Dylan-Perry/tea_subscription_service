@@ -1,24 +1,19 @@
-# README
+# Tea Subscription Service
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This Tea Subscription Service exposes several API endpoints for managing tea subscriptions for customers.
 
-Things you may want to cover:
+## Database Structure
 
-* Ruby version
+Currently, the database is comprised of four tables:
+1. Customers, which have many subscriptions
+2. Teas, which have many subscriptions
+3. Subscriptions, which have many teas
+4. Tea Subscriptions, which is a joins table between Teas and Subscriptions
 
-* System dependencies
+## Exposed Endpoints
 
-* Configuration
+Currently, the following endpoints are functional and tested:
+- Create Customer Subscription: `POST /api/v1/customers/:customer_id/subscriptions`
+- Cancel Customer Subscription: `PATCH /api/v1/customers/:customer_id/subscriptions/:subscription_id`
+- View all Customer Subscriptions: `GET /api/v1/customers/:customer_id/subscriptions`
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
